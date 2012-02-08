@@ -1,0 +1,23 @@
+RNASeqReadSimulator
+==================
+Author: Wei Li (li.david.wei AT gmail.com)
+
+Introduction
+------------
+RNASeqReadSimulator is a set of scripts generating simulated RNA-Seq reads. RNASeqReadSimulator provides users a simple tool to generate RNA-Seq reads for research purposes, and a framework to allow experienced users to expand functions. RNASeqReadSimulator offers the following features:
+
+1. It allows users to randomly assign expression levels of transcripts and generate simulated single-end or paired-end RNA-Seq reads.
+
+2. It is able to generate RNA-Seq reads that have a specified positional bias profile.
+
+3. It is able to simulate random read errors from sequencing platforms.
+
+4. The simulator consists of a few simple Python scripts. All scripts are command line driven, allowing users to invoke and design more functions.
+
+Requirements
+------------
+RNASeqReadSimulator runs on both python 2.7 and python 3.0, and biopython package is required.
+
+Demos
+-----
+The demo folder includes a few scripts and sample input files to generate RNA-Seq reads from a simple example.
