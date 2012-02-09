@@ -4,7 +4,7 @@ This file randomly assigns weights for each transcript, and gets the transcript 
 
 Usage:
 
-getbedstat.py {OPTIONS} <BED-File> 
+genexplvprofile.py {OPTIONS} <BED-File> 
 
 Options:
 
@@ -21,6 +21,9 @@ Note:
 	2. The weight is at the 8th column, if -f option is not specified. The expression level of each transcript (RPKM) can be calculated as column[8]*10^9/column[2]/sum(column[8]).
 
 History:
+
+	02/08/2012
+		Initialization.
 '''
 
 import sys;
