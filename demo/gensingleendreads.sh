@@ -2,10 +2,17 @@
 
 #-------------------------------------------
 # Parameters
-
+# Required parameters:
 # Transcript annotation (BED file)
-BED=sample.bed
+BED=input/sample.bed
 
+# output FASTA prefix
+FASTAFILE=output/single.fa
+
+# reference chromosome
+REFERENCE=input/reference.fa
+
+# Optional parameters
 # Read length
 READLEN=75
 
@@ -13,30 +20,29 @@ READLEN=75
 NREAD=100000
 
 # positional bias file
-POSBIAS=sampleposbias.txt
+POSBIAS=input/sampleposbias.txt
 
 # Read error position profile
-READERR=samplereaderror.txt
+READERR=input/samplereaderror.txt
 
-# output FASTA prefix
-FASTAFILE=outsingle.fa
+# Intermediate files
+# File for random expression level assignment
+RANDEXPLV=output/explvprofile.txt
 
-# reference chromosome
-REFERENCE=reference.fa
 
 #-----------------------------------------------
 # Commands to randomly assign weights to each transcript
 
-CMD0="sort -k 1,1 -k 2,2n $BED | genexplvprofile.py > explvprofile.txt"
+CMD0="genexplvprofile.py $BED > $RANDEXPLV"
 
 echo "Commands to randomly assign weights to each transcript:"
 echo $CMD0
 
-sort -k 1,1 -k 2,2n $BED | genexplvprofile.py > explvprofile.txt
+genexplvprofile.py $BED > $RANDEXPLV
 
 # Commands to simulate reads (output to STDOUT in BED format)  
 # If you want single-end reads, don't use the "-p" option.
-CMD1="gensimreads.py -e explvprofile.txt  -n $NREAD -b $POSBIAS -l $READLEN  $BED "
+CMD1="gensimreads.py -e $RANDEXPLV  -n $NREAD -b $POSBIAS -l $READLEN  $BED "
 
 echo "Commands to generate simulated paired-reads in BED format:"
 echo $CMD1
