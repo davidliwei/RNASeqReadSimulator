@@ -16,7 +16,7 @@ RNASeqReadSimulator is a set of scripts generating simulated RNA-Seq reads. RNAS
 
 Requirements
 ------------
-RNASeqReadSimulator runs on both python 2.7 and python 3.0, and biopython package is required.
+RNASeqReadSimulator runs on python 2.7 with biopython package installed.
 
 Installation
 ------------
@@ -45,7 +45,7 @@ Other optional scripts and files include:
 
   splitfasta.py splits paired-end reads in FASTA file into to separate files;
 
-  addvariation2splicingbed.py is a supplementary script to generate variations in splicing RNA-Seq reads; and
+  addvariation2splicingbed.py is a supplementary script to generate variations in splicing RNA-Seq reads. 
 
 
 
@@ -54,15 +54,15 @@ genexplvprofile.py
 
 This file randomly assigns weights for each transcript, and gets the transcript statistics by a given transcript annotation file (BED File).
 
-    USAGE    genexplvprofile.py {OPTIONS} <BED-File>
+    USAGE    genexplvprofile.py {OPTIONS} <BED-File|->
 
     OPTIONS
 
-      -h/--help	  		Print this message
+      -h/--help	  			Print this message
 
-      -e/--lognormial mu,sigma	Specify the mean and variance of the lognormial distribution used to assign expression levels. Default -4,4
+      -e/--lognormial <float,float>	Specify the mean and variance of the lognormial distribution used to assign expression levels. Default -4,4
 
-      -f/--statonly   		Print the statistics only; do not assign expression levels.
+      -f/--statonly   			Print the statistics only; do not assign expression levels.
 
     NOTE:
 
@@ -75,27 +75,27 @@ gensimreads.py
 -------------
 This script generates simulated RNA-Seq reads (in .bed format) from known gene annotations.
 
-    Usage: gensimreads.py {OPTIONS} <BED-File>
+    Usage: gensimreads.py {OPTIONS} <BED-File|->
         
     BED-File:      The gene annotation file (in BED format). Use '-' for STDIN input.
 
     OPTIONS
 
-      -e/--expression [expression level file]   Specify the weight of each transcript. Each line in the file should have at least (NFIELD+1)  fields, with field 0 the annotation id, and field NFIELD the weight of this annoation. If this file is not provided, uniform weight is applied.
+      -e/--expression <expression level file>   Specify the weight of each transcript. Each line in the file should have at least (NFIELD+1)  fields, with field 0 the annotation id, and field NFIELD the weight of this annoation. NFIELD is given by -f/--field option. If this file is not provided, uniform weight is applied. See the output of genexplvprofile.py as an example.
 
-      -n/--nreads readcnt  		  	Specify the number of reads to be generated. Default 100000.
+      -n/--nreads <int>  		  	Specify the number of reads to be generated. Default 100000.
 
-      -b/--posbias [positional bias file]     	Specify the positional bias file. The file should include at least 100 lines, each contains only one integer number, showing the preference of the positional bias at this position. If no positional bias file is specified, use uniform distribution bias.
+      -b/--posbias <positional bias file>     	Specify the positional bias file. The file should include at least 100 lines, each contains only one integer number, showing the preference of the positional bias at this position. If no positional bias file is specified, use uniform distribution bias.
 
-      -l/--readlen [read length]      		Specify the read length. Default 32.
+      -l/--readlen <int>      			Specify the read length. Default 32.
 
-      -o/--output [output .bed file] 		Specify the output file. The default is STDOUT
+      -o/--output <output file> 		Specify the output file. The default is STDOUT
 
-      -f/--field [NFIELD]			The field of each line as weight input. Default is 7 (beginning from field 0).
+      -f/--field  <int>				The field of each line as weight input. Default is 7 (beginning from field 0).
 
-      -p/--pairend [PELENMEAN,PELENSTD]	  	Generate paired-end reads with specified insert length mean and standard derivation. The default is 200,20.
+      -p/--pairend <int,int>		  	Generate paired-end reads with specified insert length mean and standard derivation. The default is 200,20.
 
-    NOTE:
+    NOTE
 
       The bed file is required to sort according to the chromosome name and position. In Unix systems, use "sort -k 1,1 -k 2,2n in.BED > out.BED" to get a sorted version (out.BED) of the bed file (in.BED).
 
@@ -110,13 +110,13 @@ This script is used to extract sequences from bed file.
 
     OPTIONS
 
-      -b/--seqerror [error file]		Specify the positional error profile to be used. The file should include at least 100 lines, each containing a positive number. The number at line x is the weight that an error is occured at x% position of the read. If no positional error file specified, uniform weight is assumed.
+      -b/--seqerror <error file>		Specify the positional error profile to be used. The file should include at least 100 lines, each containing a positive number. The number at line x is the weight that an error is occured at x% position of the read. If no positional error file specified, uniform weight is assumed.
 
-      -r/--errorrate [error rate]		Specify the overall error rate, a number between 0 and 1. Default is 0 (no errors).
+      -r/--errorrate <0.0-1.0>			Specify the overall error rate, a number between 0 and 1. Default is 0 (no errors).
 
-      -l/--readlen [read length]	 	Specify the read length. Default is 75.
+      -l/--readlen <int>		 	Specify the read length. Default is 75.
 
-      -f/--fill [seq] 				Fill at the end of each read by the sequence seq, if the read is shorter than the read length. Default is 'A' (to simulate poly-A tails in RNA-Seq reads).
+      -f/--fill <string> 			Fill at the end of each read by the sequence seq, if the read is shorter than the read length. Default is 'A' (to simulate poly-A tails in RNA-Seq reads).
 
     NOTE
 
