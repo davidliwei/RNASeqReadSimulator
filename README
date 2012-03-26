@@ -60,7 +60,7 @@ This file randomly assigns weights for each transcript, and gets the transcript 
 
       -h/--help	  			Print this message
 
-      -e/--lognormial <float,float>	Specify the mean and variance of the lognormial distribution used to assign expression levels. Default -4,4
+      -e/--lognormal <float,float>	Specify the mean and variance of the lognormal distribution used to assign expression levels. Default -4,4
 
       -f/--statonly   			Print the statistics only; do not assign expression levels.
 
@@ -81,7 +81,7 @@ This script generates simulated RNA-Seq reads (in .bed format) from known gene a
 
     OPTIONS
 
-      -e/--expression <expression level file>   Specify the weight of each transcript. Each line in the file should have at least (NFIELD+1)  fields, with field 0 the annotation id, and field NFIELD the weight of this annoation. NFIELD is given by -f/--field option. If this file is not provided, uniform weight is applied. See the output of genexplvprofile.py as an example.
+      -e/--expression <expression level file>   Specify the weight of each transcript. Each line in the file should have at least (NFIELD+1)  fields, with field 0 the annotation id, and field NFIELD the weight of this annotation. NFIELD is given by -f/--field option. If this file is not provided, uniform weight is applied. See the output of genexplvprofile.py as an example.
 
       -n/--nreads <int>  		  	Specify the number of reads to be generated. Default 100000.
 

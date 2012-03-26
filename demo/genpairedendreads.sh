@@ -46,7 +46,7 @@ genexplvprofile.py $BED > $RANDEXPLV
 
 # Commands to simulate reads (output to STDOUT in BED format)  
 # If you want single-end reads, don't use the "-p" option.
-CMD1="gensimreads.py -e explvprofile.txt  -n $NREAD -b $POSBIAS -l $READLEN -p $PAIREDEND  $BED "
+CMD1="gensimreads.py -e $RANDEXPLV  -n $NREAD -b $POSBIAS -l $READLEN -p $PAIREDEND  $BED "
 
 echo "Commands to generate simulated paired-reads in BED format:"
 echo $CMD1

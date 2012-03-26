@@ -10,7 +10,7 @@ OPTIONS
 
 	-h/--help\tPrint this message
 
-	-e/--lognormial\tmu,sigma	Specify the mean and variance of the lognormial distribution used to assign expression levels. Default -4,4
+	-e/--lognormal\tmu,sigma	Specify the mean and variance of the lognormal distribution used to assign expression levels. Default -4,4
 	
 	-f/--statonly\tPrint the statistics only; do not assign expression levels.
 
@@ -74,7 +74,7 @@ while argvi <(len(sys.argv)):
     sys.exit();
   elif sys.argv[argvi]=="-f" or sys.argv[argvi]=="--statonly":
     assignexplv=False;
-  elif sys.argv[argvi]=="-e" or sys.argv[argvi]=="--lognormial" :
+  elif sys.argv[argvi]=="-e" or sys.argv[argvi]=="--lognormal" :
     ms=sys.argv[argvi+1].split(",");
     argvi=argvi+1;
     if len(ms)!=2:
