@@ -94,6 +94,8 @@ This script generates simulated RNA-Seq reads (in .bed format) from known gene a
       -f/--field  <int>				The field of each line as weight input. Default is 7 (beginning from field 0).
 
       -p/--pairend <int,int>		  	Generate paired-end reads with specified insert length mean and standard derivation. The default is 200,20.
+ 
+      --stranded 				Generate stranded RNA-Seq reads.
 
     NOTE
 

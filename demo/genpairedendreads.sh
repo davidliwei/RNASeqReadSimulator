@@ -36,6 +36,10 @@ RANDEXPLV=output/explvprofile.txt
 #-----------------------------------------------
 # Commands to randomly assign weights to each transcript
 
+if [ ! -d "output" ]; then
+  mkdir output
+fi
+
 CMD0=" genexplvprofile.py $BED > $RANDEXPLV"
 
 echo "Commands to randomly assign weights to each transcript:"

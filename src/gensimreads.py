@@ -26,6 +26,8 @@ OPTIONS
 
   -p/--pairend [PELENMEAN,PELENSTD]\t Generate paired-end reads with specified insert length mean and standard derivation. The default is 200,20.
 
+  --stranded \tThe reads are strand specific.
+
 NOTE 
 
   	1. The bed file is required to sort according to the chromosome name and position. In Unix systems, use "sort -k 1,1 -k 2,2n in.BED > out.BED" to get a sorted version (out.BED) of the bed file (in.BED).  
@@ -33,6 +35,10 @@ NOTE
   	2. No problem to handle reads spanning multiple exons. 
 
 HISTORY
+
+	04/30/2012
+	  Support generating stranded RNA-Seq reads
+
 	02/16/2012
 	  Now runs on python 2.7
 
@@ -84,6 +90,8 @@ onbedfile="-";
 genpereads=False;
 pemean=200;
 pestd=20;
+
+stranded=False;
 
 for i in range(len(sys.argv)):
   if i<len(sys.argv)-1:
@@ -139,6 +147,8 @@ for i in range(len(sys.argv)):
   if sys.argv[i]=='-h' or sys.argv[i]=='--help':
     print(pydoc.render_doc(sys.modules[__name__]));
     sys.exit();
+  if sys.argv[i]=='--stranded':
+    stranded=True;
 
       
 
@@ -280,7 +290,10 @@ for lines in open(bedfile):
         lineid="%s_e_%d_%s_%d/1" % (bedfield[3],t,bedfield[0],pos);
         lineid2="%s_e_%d_%s_%d/2" % (bedfield[3],t,bedfield[0],pos);
       # random direction
-      thisdir=random.choice([1,-1]);
+      if stranded==False or direction==0:
+        thisdir=random.choice([1,-1]);
+      else:
+        thisdir=direction;
       writeBedline(onfid,lineid,bedfield[0],thisdir,startrange,lenrange);
       if genpereads==True:
         writeBedline(onfid,lineid2,bedfield[0],thisdir*(-1),startrange2,lenrange2);
