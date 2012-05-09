@@ -112,9 +112,10 @@ else:
 for lines in fileinput.input(allfile):
   nline=nline+1;
   pf=parsebed(lines);
-  chrname=pf[0];jstart=pf[1];jend=pf[2];id=pf[3];length=pf[4];direction=pf[5];nexon=pf[6];
+  chrname=pf[0];jstart=pf[1];jend=pf[2];id=pf[3];
   if len(chrname)==0 and jstart<0:
     continue;
+  length=pf[4];direction=pf[5];nexon=pf[6];
   if chrname!=prevchr or jstart-prevrange[1]>0:
     if len(prevchr)!=0:
       groupid=groupid+1;
