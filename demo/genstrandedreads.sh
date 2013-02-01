@@ -31,6 +31,8 @@ RANDEXPLV=output/explvprofile.txt
 
 
 #-----------------------------------------------
+# Add paths if users don't install the script
+export PATH=../src/:$PATH
 # Commands to randomly assign weights to each transcript
 
 if [ ! -d "output" ]; then

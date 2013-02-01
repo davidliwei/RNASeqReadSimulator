@@ -114,7 +114,7 @@ This script is used to extract sequences from bed file.
 
       -b/--seqerror <error file>		Specify the positional error profile to be used. The file should include at least 100 lines, each containing a positive number. The number at line x is the weight that an error is occured at x% position of the read. If no positional error file specified, uniform weight is assumed.
 
-      -r/--errorrate <0.0-1.0>			Specify the overall error rate, a number between 0 and 1. Default is 0 (no errors).
+      -r/--errorrate <float>			Specify the overall error rate, a real positive number. The number of errors of each read will follow a Poisson distribution with its mean value specified by --errorrate.  Default 0 (no errors).
 
       -l/--readlen <int>		 	Specify the read length. Default is 75.
 

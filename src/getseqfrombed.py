@@ -9,9 +9,9 @@ OPTIONS
 
   -b/--seqerror [error file]\tSpecify the positional error profile to be used. The file should include at least 100 lines, each containing a positive number. The number at line x is the weight that an error is occured at x% position of the read. If no positional error file specified, uniform weight is assumed.
 
-  -r/--errorrate [error rate]\tSpecify the overall error rate, a number between 0 and 1. Default is 0 (no errors).
+  -r/--errorrate [error rate]\tSpecify the overall error rate, a real positive number. The number of errors of each read will follow a Poisson distribution with its mean value specified by --errorrate.  Default 0 (no errors).
 
-  -l/--readlen [read length]\tSpecify the read length. Default is 75. 
+  -l/--readlen [read length]\tSpecify the read length. Default 75. 
 
   -f/--fill [seq]\tFill at the end of each read by the sequence seq, if the read is shorter than the read length. Default A (to simulate poly-A tails in RNA-Seq reads).
 
@@ -24,6 +24,9 @@ NOTE
 
 HISTORY
 
+	02/01/2013:
+	  Fix a bug with no read errors generated.
+	  Fix a bug with error profiles in the minus strand.
 	08/25/2011:
     	  Rename makebedseq.py to getseqfrombed.py.
     	  Print results to stdout.
@@ -38,6 +41,13 @@ import math;
 import numpy;
 from Bio import SeqIO;
 from Bio.SeqRecord import SeqRecord;
+
+# import argparse;
+# parser=argparse.ArgumentParser('Extract sequences from bed file');
+# parser.add_argument('-b','--seqerror',help='Specify the positional error profile to be used. The file should include at least 100 lines, each containing a positive number. The number at line x is the weight that an error is occured at x% position of the read. If no positional error file specified, uniform weight is assumed.');
+# parser.add_argument('-r','--errorrate',type=float,default=0.0,help='Specify the overall error rate, a number between 0 and 1. Default 0 (no errors).');
+# parser.add_argument('-l','--readlen',type=int,default=75,help='Specify the read length. Default 75.');
+# parser.add_argument('-f','--fill',default='A',help='Fill at the end of each read by the sequence seq, if the read is shorter than the read length. Default A (to simulate poly-A tails in RNA-Seq reads).');
 
 if len(sys.argv)<2:
   print>>sys.stderr, (pydoc.render_doc(sys.modules[__name__]));
@@ -67,7 +77,7 @@ for i in range(len(sys.argv)):
         sys.exit();
     if sys.argv[i]=='-r' or sys.argv[i]=='--errorrate':
       errrate=float(sys.argv[i+1]);
-      if errrate<0 or errrate>1:
+      if errrate<0: # or errrate>1:
         print>>sys.stderr, ('Error: the error rate should be between 0-1.');
         sys.exit();
       print>>sys.stderr,('Error rate: '+str(errrate));
@@ -150,9 +160,6 @@ for lines in fid:
       thisseq+=filledseq*(readlength-sum(exonlen));
   thisseq.id=bedfield[3];
   thisseq.description='';
-  # reverse-complement the sequence if it is on the negative strand
-  if bedfield[5]=='-':
-    thisseq.seq=thisseq.seq.reverse_complement();
   # mutation
   nmut=numpy.random.poisson(errrate);
   if nmut>0:
@@ -170,13 +177,24 @@ for lines in fid:
         while topos==newseq[modifyposition]:
           topos=random.choice('ATGC');
         print >>sys.stderr,('MUTATION at position '+str(modifyposition)+','+newseq[modifyposition]+'->'+topos);
+        # print >>sys.stderr,('SEQ:'+newseq);
         newseq=newseq[:modifyposition]+topos+newseq[(modifyposition+1):];
+        # print >>sys.stderr,('SEQ:'+newseq);
     #print>>sys.stderr,('NMUTATION:'+str(nmut));
     #print>>sys.stderr, (str(thisseq.seq));
     #print>>sys.stderr,(newseq);
-    #thisseq.seq=newseq;
+    thisseq.seq=newseq;
+  # reverse-complement the sequence if it is on the negative strand
+  if bedfield[5]=='-':
+    #print >>sys.stderr,('SEQ:'+thisseq.seq);
+    thisseq.seq=thisseq.seq.reverse_complement();
+    #print >>sys.stderr,('RVCSEQ:'+thisseq.seq);
   # write to record
-  SeqIO.write(thisseq,ofid,'fasta');
+  try:
+    SeqIO.write(thisseq,ofid,'fasta');
+  except ValueError:
+    print>>sys.stderr, ('Skip at line '+str(nlines)+', sequence object:');
+    print>>sys.stderr, (thisseq);
   
         
 

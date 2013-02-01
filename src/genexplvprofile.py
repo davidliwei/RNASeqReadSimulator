@@ -11,6 +11,7 @@ OPTIONS
 	-h/--help\tPrint this message
 
 	-e/--lognormal\tmu,sigma	Specify the mean and variance of the lognormal distribution used to assign expression levels. Default -4,4
+        --geometric\tmu			Use geometric distribution with parameter mu instead of lognormal distribution to assign expression levels.
 	
 	-f/--statonly\tPrint the statistics only; do not assign expression levels.
 
@@ -21,6 +22,9 @@ NOTE
 	2. The weight is at the 8th column, if -f option is not specified. The expression level of each transcript (RPKM) can be calculated as column[8]*10^9/column[2]/sum(column[8]).
 
 HISTORY
+
+	07/24/2012
+	  Enable geometric distribution for expression level assignments. Require numpy package.
 
 	02/16/2012
 	  Run on Python 2.7
@@ -36,6 +40,7 @@ import os;
 import re;
 import fileinput;
 import random;
+import numpy;
 
 def parsebed(lines):
   # Parse one line in count data
@@ -68,6 +73,8 @@ assignexplv=True;
 
 allfile=[];
 
+distype="lognormal";
+
 while argvi <(len(sys.argv)):
   if sys.argv[argvi]=="-h" or sys.argv[argvi]=="--help" :
     print(pydoc.render_doc(sys.modules[__name__]),file=sys.stderr);
@@ -75,6 +82,7 @@ while argvi <(len(sys.argv)):
   elif sys.argv[argvi]=="-f" or sys.argv[argvi]=="--statonly":
     assignexplv=False;
   elif sys.argv[argvi]=="-e" or sys.argv[argvi]=="--lognormal" :
+    distype="lognormal";
     ms=sys.argv[argvi+1].split(",");
     argvi=argvi+1;
     if len(ms)!=2:
@@ -87,6 +95,18 @@ while argvi <(len(sys.argv)):
       print('Error: incorrect parameter for -e.',file=sys.stderr);
       sys.exit(); 
     print('Mean and variance for lognormal distribution: '+str(mu)+','+str(sigma),file=sys.stderr);
+  elif sys.argv[argvi]=="--geometric":
+    distype="geometric";
+    try:
+      mu=float(sys.argv[argvi+1]);
+      if mu<0 or mu>1:
+        print('Error: the parameter for geometric distribution must be between 0 and 1.',file=sys.stderr);
+        sys.exit(); 
+    except ValueError:
+      print('Error: incorrect parameter for -e.',file=sys.stderr);
+      sys.exit(); 
+    print('Mean for geometric distribution: '+str(mu),file=sys.stderr);
+    argvi=argvi+1;
   else:
     allfile.append(sys.argv[argvi]);
   argvi=argvi+1;
@@ -122,7 +142,10 @@ for lines in fileinput.input(allfile):
       for item in currentgene:
         print(item[0]+"\t"+str(groupid)+"\t"+str(len(currentgene)),end='');
         if assignexplv==True:
-          weight=random.lognormvariate(mu,sigma)*item[1];
+          if distype=="geometric":
+           weight=numpy.random.geometric(mu)*item[1];
+          else:
+            weight=random.lognormvariate(mu,sigma)*item[1];
           print("\t"+str(weight));
         else:
           print();
@@ -144,7 +167,10 @@ if len(prevchr)!=0:
   for item in currentgene:
     print(item[0]+"\t"+str(groupid)+"\t"+str(len(currentgene)),end='');
     if assignexplv==True:
-      weight=random.lognormvariate(mu,sigma)*item[1];
+      if distype=="geometric":
+        weight=numpy.random.geometric(mu)*item[1];
+      else:
+        weight=random.lognormvariate(mu,sigma)*item[1];
       print("\t"+str(weight));
     else:
       print();
