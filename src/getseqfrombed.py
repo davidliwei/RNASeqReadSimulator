@@ -114,7 +114,7 @@ reffile=sys.argv[-1];
 
 # build reference
 seqref=SeqIO.index(reffile,'fasta');
-refkeys=seqref.keys();
+refkeys = list(seqref.keys())
 
 # read bed file, and ready for writing
 if bedfile!="-":
