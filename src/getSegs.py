@@ -75,7 +75,9 @@ def writeBedline(fid,lineid,chromosome,direction,startrange,lenrange):
   Write one line in .bed file.
   Need to provide information of chromosome, id, direction, segment starts and segment lengths
   """
-  # correct ranges
+  # skip if startrange is malformed
+  if not startrange:
+    return None
   bedrange=(startrange[0],startrange[-1]+lenrange[-1]);
   startrange=[i-startrange[0] for i in startrange];
   # directions
